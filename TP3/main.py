@@ -1,3 +1,3 @@
-from .ui import show_live_scale
+from .ui import show_animation_tool
 
-show_live_scale()
+show_animation_tool()
