@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget,QSpinBox, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PySide6.QtCore import Qt
 from maya import cmds
-from .animator import animate
+from .animator import Animator
 import maya.OpenMayaUI as omui
 from shiboken6 import wrapInstance
 
@@ -11,12 +11,13 @@ def main_maya_window():
     return wrapInstance(int(pointer), QWidget)
 
 
-class AnimationTool(QWidget):
+class AnimationTool_UI(QWidget):
     def __init__(self):
         super().__init__(main_maya_window())
         self.setWindowTitle("Animation Tool")
         self.setWindowFlags(Qt.Window)
         self.build_ui()
+        self.animator = Animator(self)
 
     def build_ui(self):
         self.main_layout = QVBoxLayout(self)
@@ -76,7 +77,7 @@ class AnimationTool(QWidget):
 
 
     def button_clicked(self):
-        animate()
+        self.animator.animate()
 
 
     def create_parameter_layout(self):
@@ -105,10 +106,11 @@ class AnimationTool(QWidget):
 
     def create_duration_spinbox(self):
         self.duration_spinbox = QSpinBox()
+        self.duration_spinbox.setRange(1,2000)
 
     def create_step_spinbox(self):
         self.step_spinbox = QSpinBox()
-
+        self.step_spinbox.setRange(1,2000)
 def show_animation_tool():
     global animation_tool
     
@@ -118,6 +120,6 @@ def show_animation_tool():
     except:
         pass
     
-    animation_tool = AnimationTool()
+    animation_tool = AnimationTool_UI()
     animation_tool.show()
 show_animation_tool()
