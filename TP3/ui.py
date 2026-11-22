@@ -10,7 +10,6 @@ def main_maya_window():
     pointer = omui.MQtUtil.mainWindow()
     return wrapInstance(int(pointer), QWidget)
 
-
 class AnimationTool_UI(QWidget):
     def __init__(self):
         super().__init__(main_maya_window())
@@ -32,7 +31,6 @@ class AnimationTool_UI(QWidget):
         self.rotate_parameters_layout = QHBoxLayout()
         self.scale_parameters_layout = QHBoxLayout()
 
-
     def create_labels(self):
         self.timing_label = QLabel("Animation Timing")
         self.translate_label = QLabel("Translate Parameters")
@@ -53,32 +51,23 @@ class AnimationTool_UI(QWidget):
         self.timing_layout.addWidget(self.step_label)
         self.timing_layout.addWidget(self.step_spinbox)
 
-        #Translate Layout
-        self.translate_layout, self.translate_spinbox = self.create_parameter_layout()
-        self.main_layout.addWidget(self.translate_label)
-        self.main_layout.addLayout(self.translate_layout)
-
-        #Rotate Layout
-        self.rotate_layout, self.rotate_spinbox = self.create_parameter_layout()
-        self.main_layout.addWidget(self.rotate_label)
-        self.main_layout.addLayout(self.rotate_layout)
-
-        #Scale Layout
-        self.scale_layout, self.scale_spinbox = self.create_parameter_layout()
-        self.main_layout.addWidget(self.scale_label)
-        self.main_layout.addLayout(self.scale_layout)
-
-
+        self.translate_layout, self.translate_spinbox = self.create_widget_layout(self.translate_label)
+        self.translate_layout, self.translate_spinbox = self.create_widget_layout(self.rotate_label)
+        self.scale_layout, self.scale_spinbox = self.create_widget_layout(self.scale_label)
 
     def create_button(self):
         self.confirm_animation_button = QPushButton("Confirm Animation")
         self.main_layout.addWidget(self.confirm_animation_button)
         self.confirm_animation_button.clicked.connect(self.button_clicked)
 
+    def create_widget_layout(self,label):
+        layout, spinbox = self.create_parameter_layout()
+        self.main_layout.addWidget(label)
+        self.main_layout.addLayout(layout)
+        return layout,spinbox
 
     def button_clicked(self):
         self.animator.animate()
-
 
     def create_parameter_layout(self):
 
@@ -86,23 +75,21 @@ class AnimationTool_UI(QWidget):
         spinboxes = {}
 
         for parameter in ["min", "max"]:
-            row = QHBoxLayout()
+            ligne = QHBoxLayout()
 
-            for axis in ["x", "y", "z"]:
+            for axis in ["X", "Y", "Z"]:
                 label = QLabel(f"{parameter} {axis}:")
                 spinbox = QSpinBox()
 
-                row.addWidget(label)
-                row.addWidget(spinbox)
+                ligne.addWidget(label)
+                ligne.addWidget(spinbox)
+                spinbox.setRange(-100,100)
 
-                spinboxes[f"{parameter}_{axis}"] = spinbox
+                spinboxes[f"{parameter}_{axis}"] = spinbox 
 
-
-            layout.addLayout(row)
+            layout.addLayout(ligne)
 
         return layout, spinboxes
-
-
 
     def create_duration_spinbox(self):
         self.duration_spinbox = QSpinBox()
@@ -111,15 +98,3 @@ class AnimationTool_UI(QWidget):
     def create_step_spinbox(self):
         self.step_spinbox = QSpinBox()
         self.step_spinbox.setRange(1,2000)
-def show_animation_tool():
-    global animation_tool
-    
-    try:
-        animation_tool.close()
-        animation_tool.deleteLater()
-    except:
-        pass
-    
-    animation_tool = AnimationTool_UI()
-    animation_tool.show()
-show_animation_tool()
