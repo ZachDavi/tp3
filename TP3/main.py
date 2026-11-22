@@ -6,7 +6,7 @@ from . import animator, ui
 importlib.reload(animator)
 importlib.reload(ui)
 
-
+#Fait apparaître le tool
 def show_animation_tool():
     global animation_tool
     
