@@ -16,8 +16,8 @@ class AnimationTool_UI(QWidget):
         super().__init__(main_maya_window())
         self.setWindowTitle("Animation Tool")
         self.setWindowFlags(Qt.Window)
-        self.build_ui()
         self.animator = Animator(self)
+        self.build_ui()
 
     #Fonction pour build le ui
     def build_ui(self):
@@ -57,10 +57,10 @@ class AnimationTool_UI(QWidget):
         self.timing_layout.addWidget(self.step_spinbox)
 
         #Ajoute les widget au layout avec les spinbox (Fonction nouvelle que j'expérimente, donné des recommendations pour optimiser/améliorer)
-        self.translate_layout, self.translate_spinbox = self.create_widget_layout(self.translate_label) #J'ai du rajouté mon layout et la spinbox = ... parce que ca crashait sinon.
+        self.translate_spinbox = self.create_widget_layout(self.translate_label) #J'ai du rajouté mon layout et la spinbox = ... parce que ca crashait sinon.
         #Beaucoup d'essaie erreur, j'ai compris qu'il faut que j'intialiste mon layout et ma spinbox pour aller les chercher dans ma fonction 
-        self.rotate_layout, self.rotate_spinbox = self.create_widget_layout(self.rotate_label)
-        self.scale_layout, self.scale_spinbox = self.create_widget_layout(self.scale_label)
+        self.rotate_spinbox = self.create_widget_layout(self.rotate_label)
+        self.scale_spinbox = self.create_widget_layout(self.scale_label)
 
     #Créé le bouton qui confirme
     def create_button(self):
@@ -74,7 +74,7 @@ class AnimationTool_UI(QWidget):
         #j'ai utiliser beaucoup de resources en ligne pour arriver a ce resultat et je ne sais pas si c'est la facon optimiser de faire)
         self.main_layout.addWidget(label)
         self.main_layout.addLayout(layout)
-        return layout,spinbox
+        return spinbox
 
     #Fonction qui crée tout les spinbox et label (J'ai essayer de le faire plus condenser possible, mais je ne sais pas comment faire pour faire tout les spinbox : translate,rotate,scale..)
     def create_parameter_layout(self):
