@@ -14,10 +14,11 @@ class Animator():
     #Logique derrière les animations
     def animate(self):
         cmds.undoInfo(openChunk=True)
-        self.set_animation_duration()
-        self.set_animation_key()
-
-        cmds.undoInfo(closeChunk=True)
+        try:
+            self.set_animation_duration()
+            self.set_animation_key()
+        finally:
+            cmds.undoInfo(closeChunk=True)
 
     #Met la durée de l'animation
     def set_animation_duration(self):
@@ -34,11 +35,11 @@ class Animator():
         step = self.ui.step_spinbox.value()
         duration = self.ui.duration_spinbox.value()
         liste_objet = cmds.ls(selection=True)
-        print(f"{duration%step}")
 
         #Main logic derriere le placement des keys
         if (duration % step == 0):
             for selected in liste_objet: #On regarde dans la liste
+                cmds.cutKey(selected,clear = True)
                 for i in range(0,duration,step): # Nouveau truc que j'ai trouvé le in range a un debut une fin et un step inclus
                     
                     #Utilise la fonction axis parameters pour get les values des spinbox (Peut être optimisé)
@@ -78,9 +79,7 @@ class Animator():
             values[axis] = random.uniform(min_value, max_value) #Stock la valeur de chaque axe dans values
         return values
 
-    def set_keyframe_to_values(self,selection_group,parameter,current_time,value_group):
-        parameter_group = {"translate": self.ui.translate_spinbox,"rotate":self.ui.rotate_spinbox,"scale":self.ui.scale_spinbox}
-        
+    def set_keyframe_to_values(self,selection_group,parameter,current_time,value_group):        
         for axis in ["X","Y","Z"]:
             cmds.setKeyframe(selection_group, attribute=f"{parameter}{axis}", time=current_time, value=value_group[axis])
 
